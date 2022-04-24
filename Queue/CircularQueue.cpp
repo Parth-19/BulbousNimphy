@@ -1,119 +1,95 @@
-// Circular Queue implementation in C++
-
-#include <iostream>
-#define SIZE 5 /* Size of Circular Queue */
-
+#include<iostream>
 using namespace std;
-
-class Queue {
-   private:
-  int items[SIZE], front, rear;
-
-   public:
-  Queue() {
-    front = -1;
-    rear = -1;
-  }
-  // Check if the queue is full
-  bool isFull() {
-    if (front == 0 && rear == SIZE - 1) {
-      return true;
+int cycle_queue[10],front=-1,rear=-1,n=10;
+//push
+void push(int val)
+{
+ if (rear==n-1&&front==0)
+ {
+     cout<<"Stack overflow";
+ }
+ else if (front==-1&&rear==-1)
+ {
+     front=0;
+     rear=0;
+     cycle_queue[rear]=val;
+ }
+ else if (rear==n-1&&front!=0)
+ {
+     rear=0;
+     cycle_queue[rear]=val;
+ }
+ else
+ {
+     rear++;
+     cycle_queue[rear]=val;
+ }
+ 
+}
+//pop
+void pop()
+{
+    if (front==-1)
+    {
+        cout<<"Stack underflow"<<endl;
     }
-    if (front == rear + 1) {
-      return true;
+    if (front==rear)
+    {
+         cout<<cycle_queue[front]<<" is deleted"<<endl;
+        front++;
+        front=-1;
+        rear=-1;
     }
-    return false;
-  }
-  // Check if the queue is empty
-  bool isEmpty() {
-    if (front == -1)
-      return true;
+    if (front==n-1)
+    {
+         cout<<cycle_queue[front]<<" is deleted"<<endl;
+        front++;
+        front=0;
+    }
     else
-      return false;
-  }
-  // Adding an element
-  void enQueue(int element) {
-    if (isFull()) {
-      cout << "Queue is full";
-    } else {
-      if (front == -1) front = 0;
-      rear = (rear + 1) % SIZE;
-      items[rear] = element;
-      cout << endl
-         << "Inserted " << element << endl;
+    {
+        cout<<cycle_queue[front]<<" is deleted"<<endl;
+        front++;
     }
-  }
-  // Removing an element
-  int deQueue() {
-    int element;
-    if (isEmpty()) {
-      cout << "Queue is empty" << endl;
-      return (-1);
-    } else {
-      element = items[front];
-      if (front == rear) {
-        front = -1;
-        rear = -1;
-      }
-      // Q has only one element,
-      // so we reset the queue after deleting it.
-      else {
-        front = (front + 1) % SIZE;
-      }
-      return (element);
+}
+void display()
+{
+    for (int i = front; i <= rear; i++)
+    {
+        cout<<cycle_queue[i]<<" "<<endl;
     }
-  }
+    
+}
+int main()
+{
+ int a,b;
+ while(a!=4)
+ {
+ cout<<"\n1 push\n2 pop\n3 display\n4 exit"<<endl;;
+ cin>>a;
+ switch (a)
+ {
+ case(1):
+     cout<<"Enter the element you want to push"<<endl;
+     cin>>b;
+     push(b);
+     break;
+ case(2):
+    pop();
+    break;  
+ case(3):
+    cout<<"******************************"<<endl;
+    display();
+    cout<<"******************************"<<endl;
+    break; 
+ case(4):
+  break; 
+ 
+ default:
+     cout<<"You have entered wrong number"<<endl;
+     break;
+ }
+ }
 
-  void display() {
-    // Function to display status of Circular Queue
-    int i;
-    if (isEmpty()) {
-      cout << endl
-         << "Empty Queue" << endl;
-    } else {
-      cout << "Front -> " << front;
-      cout << endl
-         << "Items -> ";
-      for (i = front; i != rear; i = (i + 1) % SIZE)
-        cout << items[i];
-      cout << items[i];
-      cout << endl
-         << "Rear -> " << rear;
-    }
-  }
-};
-
-int main() {
-  Queue q;
-
-  // Fails because front = -1
-  q.deQueue();
-
-  q.enQueue(1);
-  q.enQueue(2);
-  q.enQueue(3);
-  q.enQueue(4);
-  q.enQueue(5);
-
-  // Fails to enqueue because front == 0 && rear == SIZE - 1
-  q.enQueue(6);
-
-  q.display();
-
-  int elem = q.deQueue();
-
-  if (elem != -1)
-    cout << endl
-       << "Deleted Element is " << elem;
-
-  q.display();
-
-  q.enQueue(7);
-
-  q.display();
-
-  // Fails to enqueue because front == rear + 1
-  q.enQueue(8);
-
-  return 0;
+return 0;
 }
